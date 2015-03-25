@@ -26,4 +26,4 @@ Responsible for extracting beats from given audio file, playing it and sending _
 __Usage__: ``` sudo python play.py <filename> ```
 
 ## Questions? Support?
-Any questions may be send at ```niespodd@ee.pw.edu.pl```.
+Any questions may be sent at ```niespodd@ee.pw.edu.pl```.
