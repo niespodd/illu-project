@@ -13,14 +13,17 @@ _Raspberry PI_ with Raspberrian or similar OS installed and some electronic stuf
 4. python-mplayer (MPlayer wrapper for Python)
 
 ## How does it work?
-Project is made of two modules. The first is _Light Controller_ which is listening to something called beat-signal from the second module __Player__. The _beat signal__ is just a standard POSIX signal USR1 which tells light controller to flash the lights in proper user-defined way.
+Project is made of two modules. The first is __Light Controller__ which is listening to something called beat-signal from the second module __Player__. The _beat signal_ is just a standard POSIX signal USR1 which tells light controller to flash the lights in proper user-defined way.
 
 ### Light Controller
-It's located in ```/light/``` folder. There is a ```modules``` folder inside. These modules tells controller how it should react to the beat - e.g. flash all lights on and then off, flash one of them, flash them sequentialy etc.
+It's located in ```/light/``` folder. There is a ```modules``` folder inside. These modules tells controller how it should react to the beat - e.g. flash all lights on and then off, flash one of them, flash them sequentialy etc. - as you wish. Take a look at default example scripts.
 
-The idea is to put Light Controller as a daemon running in the background.
+__Usage__: ``` sudo python light.py ```
 
-### Installation
+### Player
+Responsible for extracting beats from given audio file, playing it and sending _beat-signal_ to Light Controller.
 
+__Usage__: ``` sudo python play.py <filename> ```
 
-...
+## Questions? Support?
+Any questions may be send at ```niespodd@ee.pw.edu.pl```.
