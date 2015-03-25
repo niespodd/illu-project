@@ -1,6 +1,6 @@
 import signal, sys, os, time
 import RPi.GPIO as GPIO
-from light_modules import *
+from modules import *
 
 """ GPIO Pins put from official docs - feel free to modifiy """
 GPIO_PINS = [ 11, 13, 15, 16 ]
