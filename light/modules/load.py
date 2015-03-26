@@ -15,7 +15,7 @@ class Loading:
 			self.controller.off( i )
 
 		self.current_channel = self.current_channel + 1
-		if self.current_channel > self.controller.pin_count:
+		if self.current_channel >= self.controller.pin_count:
 			self.current_channel = 0
 	
 		self.controller.on( self.current_channel )

@@ -3,12 +3,12 @@ import RPi.GPIO as GPIO
 from modules import *
 
 """ GPIO Pins put from official docs - feel free to modifiy """
-GPIO_PINS = [ 11, 13, 15, 16 ]
+GPIO_PINS = [ 18, 4, 17, 27 ]
 GPIO_MODE = GPIO.BCM
 
-IDLE = 15 
+IDLE = 10
 IDLE_MODULE = Loading
-WORKING_MODULE = Sequential
+WORKING_MODULE = Random
 """ Printing anything on stdout? Not necessary, just for debugging purposes. """
 VERBOSE = True
 
@@ -63,7 +63,7 @@ class LightController:
 
 		""" IDLE implemented below :) """
 		while True:
-			time.sleep( 1 ) # Count every second of idle and loading work every second; This should be fixed value (0.5-15).
+			time.sleep( 0.5 ) # Count every second of idle and loading work every second; This should be fixed value (0.5-15).
 			time_delta = time.time() - self.last_activity
 
 			if time.time() - self.last_activity >= IDLE:
