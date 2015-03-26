@@ -1,16 +1,19 @@
-import os, sys, hashlib, time
+import os, sys, hashlib, time, uuid
 from mplayer import Player
 from signal import SIGUSR1
+from aubio import source, onset
 
 VERBOSE = True
 """ BEAT_DELTA - the difference between played music position and beat position """
-BEAT_DELTA = 0.3
+BEAT_DELTA = 0
+SAMPLERATE = 512
+WIN_S = 512
 
 class Play:
 	player = None
 	player_status = False
 	hash = None
-	beats = [ 1, 1.1, 1.2, 1.3, 1.9, 2, 5, 10, 10.1, 10.2, 20]
+	beats = []
 	controller_pid = None
 
 	def __init__( self, filepath ):
@@ -45,19 +48,44 @@ class Play:
 	""" send_controller() - to send beat signal via kill to controller """
 	def send_controller( self ):
 		try:
-			os.kill( pid, SIGUSR1 )
+			os.kill( self.controller_pid, SIGUSR1 )
 		except:
 			print "Beat found! Nothing happens, becouse propably no light controller is active."
 
 
 	def load_beats( self, filepath ):
 		if os.path.isfile( filepath + ".beats" ):
-			""" Not implemented yet. """
+			f = open( filepath + ".beats", "r" )
+			self.beats = f.read().split("\n")
+			f.close()
+
+			print "Loaded %d beats." % len( self.beats )
+
 			return None
 		else:
-			""" Should convert file into .wav and progress its beats """
-			return None
-		
+			""" Convert mp3 and others to wave """
+			tmp_filepath = "/tmp/%s.wav" % str(uuid.uuid4())
+			os.system( "ffmpeg -i %s %s" % ( filepath, tmp_filepath ) )
+
+			print "Tracking beats..."
+			""" Progress it with Aubio """
+			src = source(tmp_filepath, 0, WIN_S / 2)
+			o = onset("default", WIN_S, WIN_S / 2, src.samplerate)
+	
+			onsets = []
+			while True:
+				samples, read = src()
+				if o(samples):
+					self.beats.append( o.get_last_s() )
+				if read < WIN_S / 2: break
+
+			print "Saving beats."
+
+			f = open( filepath + '.beats', 'w+')
+			f.write( "\n".join( map(str, self.beats)) )
+			f.close()
+
+			return None		
 		return None 
 
 	def load_player( self, filepath ):
@@ -74,6 +102,7 @@ class Play:
 
 	def play( self ):
 		""" Start the music... """
+		self.player.time_pos = 0
 		self.turn_player()
 
 		""" ...and send beat-signals in background. """

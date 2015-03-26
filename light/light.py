@@ -3,8 +3,9 @@ import RPi.GPIO as GPIO
 from modules import *
 
 """ GPIO Pins put from official docs - feel free to modifiy """
-GPIO_PINS = [ 18, 4, 17, 27 ]
+GPIO_PINS = [ 7, 10, 23, 17, 4, 14 ]
 GPIO_MODE = GPIO.BCM
+
 
 IDLE = 10
 IDLE_MODULE = Loading
@@ -14,7 +15,7 @@ VERBOSE = True
 
 class LightController:
 	""" Default in-use pin count: """
-	pin_count = 4
+	pin_count = len( GPIO_PINS )
 	last_activity = None
 
 	""" Modules used to work on """
@@ -63,7 +64,7 @@ class LightController:
 
 		""" IDLE implemented below :) """
 		while True:
-			time.sleep( 0.5 ) # Count every second of idle and loading work every second; This should be fixed value (0.5-15).
+			time.sleep( 0.05 ) # Count every second of idle and loading work every second; This should be fixed value (0.5-15).
 			time_delta = time.time() - self.last_activity
 
 			if time.time() - self.last_activity >= IDLE:
