@@ -5,8 +5,8 @@ from aubio import source, onset
 
 VERBOSE = True
 """ BEAT_DELTA - the difference between played music position and beat position """
-BEAT_DELTA = 0
-SAMPLERATE = 512
+BEAT_DELTA = -0.15
+SAMPLERATE = 44100
 WIN_S = 512
 
 class Play:
@@ -50,6 +50,7 @@ class Play:
 		try:
 			os.kill( self.controller_pid, SIGUSR1 )
 		except:
+			self.controller_pid = self.get_controller()
 			print "Beat found! Nothing happens, becouse propably no light controller is active."
 
 
@@ -70,13 +71,15 @@ class Play:
 			print "Tracking beats..."
 			""" Progress it with Aubio """
 			src = source(tmp_filepath, 0, WIN_S / 2)
-			o = onset("default", WIN_S, WIN_S / 2, src.samplerate)
+			print " detected samplerate %d " % src.samplerate
+			o = onset("default", WIN_S, WIN_S / 2, SAMPLERATE)
 	
 			onsets = []
 			while True:
 				samples, read = src()
 				if o(samples):
 					self.beats.append( o.get_last_s() )
+
 				if read < WIN_S / 2: break
 
 			print "Saving beats."
@@ -85,7 +88,7 @@ class Play:
 			f.write( "\n".join( map(str, self.beats)) )
 			f.close()
 
-			return None		
+			return None
 		return None 
 
 	def load_player( self, filepath ):
@@ -105,6 +108,8 @@ class Play:
 		self.player.time_pos = 0
 		self.turn_player()
 
+		print "Playing (with %d beats)." % len(self.beats)
+
 		""" ...and send beat-signals in background. """
 		current_beat = 0
 		while True:
@@ -113,9 +118,10 @@ class Play:
 				print "No more beats to play. Gonna make a powernap for 5s :)."
 				time.sleep( 5 )
 				break
-			if current_time + BEAT_DELTA > self.beats[ current_beat ]:
+			if current_time > float(self.beats[ current_beat ]) + BEAT_DELTA:
 				self.send_controller()
 				current_beat = current_beat + 1 
+
 
 
 if __name__ == "__main__":
