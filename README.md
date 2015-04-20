@@ -1,7 +1,7 @@
 # Illu-Project - lights controlled with beats
 Illu is a project written in Python containing proper modules to control Raspberry PI GPIO channels connected to high-voltage lights. Project contains both schemas and software needed to run your own Illu.
 
-[![VIDEO](http://img.youtube.com/vi/ofYJ8U3hO04/0.jpg)](http://www.youtube.com/watch?v=ofYJ8U3hO04)
+[![VIDEO](http://img.youtube.com/vi/4tIH_1QD1aw/0.jpg)](http://www.youtube.com/watch?v=4tIH_1QD1aw)
 
 
 ## Requirements
